@@ -30,7 +30,7 @@ let exampleList = [{
 searchListAny(exampleList, "i");
 searchListSpecific(exampleList, "name", "bing");
 searchListAnyMulti(exampleList, ["bing", "arf", "boobe"])
-searchListSpecificMulti(exampleList, ["name", "prop"], ["MONK", "yes"])
+searchListSpecificMulti(exampleList, ["name", "prop"], ["MONK", "yes"]) // Same number of strings in both arrays, or it won't work!
 
 // Searches an array of objects (a list) for any match between all properties and one search prompt
 // Returns an array with the matching objects; empty if no matches
@@ -72,20 +72,20 @@ function searchListSpecific(list, property, searchPrompt) {
 function searchListAnyMulti(list, searchPromptArray) {
   let filteredList = [];
 
-  for (let object of list) {  // Loop through all objects in the list
-    for (let prop in object) {  // Loop through all properties in the object
+  for (let object of list) { // Loop through all objects in the list
+    for (let prop in object) { // Loop through all properties in the object
       let matched = false;
 
       for (let search of searchPromptArray) { // Loop through all search prompts
         if (object[prop].toLowerCase().includes(search.trim().toLowerCase())) { // If there is a match...
-          filteredList.push(object);  // Push object to new array
+          filteredList.push(object); // Push object to new array
           matched = true; // A match has been made
-          break;  // Break out of the search prompt loop, we only need one match
+          break; // Break out of the search prompt loop, we only need one match
         }
       }
 
       if (matched) {
-        break;  // Stop looping through properties if a match has been made
+        break; // Stop looping through properties if a match has been made
       }
     }
   }
@@ -97,8 +97,12 @@ function searchListAnyMulti(list, searchPromptArray) {
 
 // Searches an array of objects for matches between all given properties and all given search prompts
 // Comparisons are done in the order of input, so index 0 in propertyArray is searched for index 0 in searchPromptArray
-// Returns an array with the matching objects; empty if no matches
+// Returns an array with the matching objects; empty if no matches or differing array lengths
 function searchListSpecificMulti(list, propertyArray, searchPromptArray) {
+  if (propertyArray.length != searchPromptArray.length) {
+    console.log("Error: Arrays aren't equally long, fill out with blank strings if you have to");
+    return [];
+  }
   let filteredList = [];
 
   for (let object of list) {
